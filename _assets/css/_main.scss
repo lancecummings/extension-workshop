@@ -451,18 +451,12 @@ html {
 // Grid Container
 // ------
 
-.site.full-width {
-  .site-content,
-  .social,
-  .site-footer {
-    .grid-container {
-      @include breakpoint(large) {
-        max-width: 84%;
-      }
-      @include breakpoint(xxlarge) {
-        max-width: $global-width;
-      }
-    }
+.grid-container {
+  @include breakpoint(xlarge) {
+    max-width: 84%;
+  }
+  @include breakpoint(xxlarge) {
+    max-width: $global-width;
   }
 }
 
