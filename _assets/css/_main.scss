@@ -403,14 +403,12 @@ html {
     }
   }
 
-  &.full-width,
-  &.side-bar {
-    .site-content {
-      padding-top: rem-calc(40);
+  &.full-width .site-content,
+  &.side-bar .site-wrapper {
+    padding-top: rem-calc(40);
 
-      @include breakpoint(large) {
-        padding-top: rem-calc(64);
-      }
+    @include breakpoint(large) {
+      padding-top: rem-calc(64);
     }
   }
 
@@ -445,6 +443,7 @@ html {
 }
 
 .site-header,
+.social,
 .site-footer {
   flex: none;
 }
@@ -452,23 +451,16 @@ html {
 // Grid Container
 // ------
 
-.site.full-width,
-.site.side-bar {
-
-  .grid-container {
-    @include breakpoint(xlarge) {
-      max-width: 84%;
-    }
-    @include breakpoint(xxlarge) {
-      max-width: $global-width;
-    }
-  }
-
+.site.full-width {
   .site-content,
+  .social,
   .site-footer {
     .grid-container {
-      @include breakpoint(large only) {
+      @include breakpoint(large) {
         max-width: 84%;
+      }
+      @include breakpoint(xxlarge) {
+        max-width: $global-width;
       }
     }
   }
@@ -817,7 +809,6 @@ $hamburger-hover-transition-timing-function: linear;
     }
   }
 }
-
 
 // COMPONENT STYLES
 // -------------------------------------------------------------------------------------------------------------------
@@ -1213,7 +1204,6 @@ $hamburger-hover-transition-timing-function: linear;
     margin-bottom: rem-calc(24);
   }
 }
-
 
 // Video Box
 // ------
@@ -1782,4 +1772,3 @@ span.example {
     margin-top: 1.5em;
   }
 }
-
