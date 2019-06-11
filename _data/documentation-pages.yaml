@@ -1,26 +1,95 @@
 primary:
   - title: "Documentation Topics"
     url: "/documentation/develop/"
-    draft-label: true
     subfolderitems:
       - title: "Develop"
         url: "/documentation/develop/"
-        draft-label: true
+        categories:
+          - category: "Firefox Tools"
+            pages:
+              - title: "Sub Page"
+                url: "/documentation/develop/subpage/"
+                subpageitems:
+                  - title: "Installation"
+                    id: "installation"
+                  - title: "Using web-ext"
+                    id: "using-web-ext"
+                  - title: "See also"
+                    id: "see-also"
+              - title: "Next Sub Page"
+                url: "/documentation/develop/anothersubpage/"
+                subpageitems:
+                  - title: "Installation"
+                    id: "installation"
+                  - title: "Using web-ext"
+                    id: "using-web-ext"
+                  - title: "See also"
+                    id: "see-also"
+          - category: "User Experience"
+            pages:
+              - title: "Sub Page"
+                url: "/documentation/develop/subpage/"
+                subpageitems:
+                  - title: "Installation"
+                    id: "installation"
+                  - title: "Using web-ext"
+                    id: "using-web-ext"
+                  - title: "See also"
+                    id: "see-also"
+              - title: "Next Sub Page"
+                url: "/documentation/develop/anothersubpage/"
+                subpageitems:
+                  - title: "Installation"
+                    id: "installation"
+                  - title: "Using web-ext"
+                    id: "using-web-ext"
+                  - title: "See also"
+                    id: "see-also"
+          - category: "Mobile"
+            pages:
+              - title: "Sub Page"
+                url: "/documentation/develop/subpage/"
+                subpageitems:
+                  - title: "Installation"
+                    id: "installation"
+                  - title: "Using web-ext"
+                    id: "using-web-ext"
+                  - title: "See also"
+                    id: "see-also"
+              - title: "Next Sub Page"
+                url: "/documentation/develop/anothersubpage/"
+                subpageitems:
+                  - title: "Installation"
+                    id: "installation"
+                  - title: "Using web-ext"
+                    id: "using-web-ext"
+                  - title: "See also"
+                    id: "see-also"
       - title: "Publish"
-        draft-label: true
         url: "/documentation/publish/"
       - title: "Manage"
         url: "/documentation/manage/"
-        draft-label: true
       - title: "Enterprise"
         url: "/documentation/enterprise/"
-        draft-label: true
       - title: "Themes"
         url: "/documentation/themes/"
-        draft-label: true
   - title: "Extension Basics"
     url: "/extension-basics/"
-    draft-label: true
   - title: "Community"
     url: "/community/"
-    draft-label: true
+    categories:
+      - category: "About the Community"
+        pages:
+          - title: "Discourse Forum"
+            url: "https://www.firefox.com"
+            target: "_blank"
+      - category: "Contribute to the API"
+        pages:
+          - title: "Discourse Forum"
+            url: "https://www.firefox.com"
+            target: "_blank"
+      - category: "Start Contributing"
+        pages:
+          - title: "Discourse Forum"
+            url: "https://www.firefox.com"
+            target: "_blank"

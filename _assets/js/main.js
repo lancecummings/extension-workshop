@@ -29,7 +29,7 @@ jQuery(document).ready(function($) {
 
   $('.has-children').each(function() {
     if ($(this).find('.is-active').length) {
-      $(this).addClass('is-active');
+      $(this).addClass('has-active-children');
     }
   });
 

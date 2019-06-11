@@ -560,13 +560,14 @@ $hamburger-hover-transition-timing-function: linear;
     flex: 1 1 auto;
     margin-right: 1.2rem;
 
-    .level-one {
+    .primary {
       @include horizontal_list($margin: 1.2rem);
 
       > li {
         padding: rem-calc(9 0);
 
-        &.is-active {
+        &.is-active,
+        &.has-active-children {
           position: relative;
 
           &::after {
@@ -593,7 +594,7 @@ $hamburger-hover-transition-timing-function: linear;
       }
     }
 
-    .level-two {
+    .subfolder {
       pointer-events: none;
       opacity: 0;
       transform: translateY(1em);
@@ -611,7 +612,8 @@ $hamburger-hover-transition-timing-function: linear;
       li {
         padding: rem-calc(6 16);
 
-        &.is-active {
+        &.is-active,
+        &.has-active-children {
           background-color: #e5effb;
 
           a {
@@ -621,10 +623,14 @@ $hamburger-hover-transition-timing-function: linear;
       }
     }
 
-    .has-children {
+    .category {
+      display: none;
+    }
+
+    .has-subfolder {
       position: relative;
 
-      &:hover .level-two {
+      &:hover .subfolder {
         pointer-events: auto;
         opacity: 1;
         transform: translateY(0);
@@ -648,7 +654,7 @@ $hamburger-hover-transition-timing-function: linear;
     height: calc(100% - #{rem-calc(40)});
     flex-flow: column nowrap;
 
-    .level-one li {
+    .primary li {
       padding: rem-calc(12 16);
 
       &.has-children {
@@ -660,11 +666,11 @@ $hamburger-hover-transition-timing-function: linear;
       }
     }
 
-    .level-two li {
+    .subfolder li {
       padding: rem-calc(12 0);
     }
 
-    .level-one {
+    .primary {
       flex: 1 1 auto;
     }
 
