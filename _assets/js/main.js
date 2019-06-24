@@ -18,6 +18,13 @@ jQuery(document).ready(function($) {
 
   var is_touch_device = 'ontouchstart' in document.documentElement;
 
+  $('body').on('mousedown', function() {
+    $('body').addClass('using-mouse');
+  });
+  $('body').on('keydown', function() {
+    $('body').removeClass('using-mouse');
+  });
+
   // PLUGINS
   // ------------------
 
@@ -45,6 +52,13 @@ jQuery(document).ready(function($) {
     $(
       '.sidenav-top .primary > .has-subfolder.has-active-children'
     ).sideNavTop();
+  }
+
+  // Secondary Dropdown should not be tabbed through since it repeats functionality above:
+  if ($('.sidenav-top a').length) {
+    $('.sidenav-top a').each(function() {
+      $(this).attr('tabindex', '-1');
+    });
   }
 
   if ($('.sidenav-detail').length) {
@@ -167,6 +181,20 @@ jQuery(document).ready(function($) {
   }
 
 
+  // 13. Sidebar Nav Page Section Highlighting
+  // ------
+
+  if ($('.is-active > .section').length) {
+    $('.is-active > .section').highlightPageSection();
+  }
+
+  // 14. Expandable List
+  // ------
+
+  if ($('.expandable-list').length) {
+    $('.expandable-list').expandableList();
+  }
+
   // Init Breakpoint Listeners
   // ------------------
 
@@ -267,8 +295,25 @@ jQuery(document).ready(function($) {
   // 1.b Desktop Menu
 
   $.fn.desktopMenu = function() {
+    var $container = this;
+    var $subnav = $container.find('.subfolder');
+
+    $subnav
+      .on('focus', 'a', function() {
+        $(this)
+          .closest('.has-subfolder')
+          .addClass('over');
+      })
+      .on('blur', 'a', function() {
+        $(this)
+          .closest('.has-subfolder')
+          .removeClass('over');
+      });
+
     return {
-      kill: function() {},
+      kill: function() {
+        $subnav.off('focus').off('blur');
+      },
     };
   };
 
@@ -460,6 +505,15 @@ jQuery(document).ready(function($) {
         var $el = $('#' + id);
         var top = id == 'top' ? $el.offset().top : $el.offset().top - offset;
         $('html').velocity('scroll', { duration: 900, offset: top });
+
+        var url_state =
+          window.location.protocol +
+          '//' +
+          window.location.host +
+          window.location.pathname +
+          '#' +
+          id;
+        window.history.pushState({ href: url_state }, '', url_state);
       }
     });
 
@@ -576,7 +630,7 @@ jQuery(document).ready(function($) {
     var settings = $.extend(
       {
         container:
-          '<a href="" class="cell small-12 large-4 tile tile-block-link no-img"><div class="block-link"></div></a>',
+          '<a href="" class="cell small-12 large-4 tile illustrated-tile tile-block-link no-img"><div class="block-link"></div></a>',
         breakpoint: 'atleast_large',
         num: 3,
       },
@@ -755,6 +809,7 @@ jQuery(document).ready(function($) {
       options
     );
     var $window = $(window);
+    var $body = $('body');
     var $links = this;
     var $panels = $(settings.panels);
 
@@ -775,25 +830,46 @@ jQuery(document).ready(function($) {
 
     function openPopup($link, $panel) {
       if ($panel.length) {
-        var x =
-          $link.offset().left + settings.offset_x > settings.padding_x
-            ? $link.offset().left + settings.offset_x
-            : settings.padding_x;
-        var y =
-          $link.offset().top + settings.offset_y - $window.scrollTop() >
-          settings.padding_y
-            ? $link.offset().top + settings.offset_y - $window.scrollTop()
-            : settings.padding_y;
-        $panel.css({ top: y, left: x });
-        $panel.velocity('transition.slideUpIn', { duration: 300 });
+        positionPanel($panel);
+        $panel.velocity('transition.slideUpIn', {
+          duration: 300,
+          complete: function() {
+            if (!$body.hasClass('using-mouse')) {
+              $panel.find('button.close').focus();
+            }
+          },
+        });
         $panel
           .find('button.close')
           .off('click')
           .on('click', function() {
-            $panel.velocity('transition.slideDownOut', { duration: 300 });
+            $panel.velocity('transition.slideDownOut', {
+              duration: 300,
+              complete: function() {
+                if (!$body.hasClass('using-mouse')) {
+                  $link.focus();
+                }
+              },
+            });
           });
       }
     }
+
+    function positionPanel($panel) {
+      var x = $window.width() / 2;
+      var y = $window.height() / 2;
+      var w = $panel.outerWidth() / 2;
+      var h = $panel.outerHeight() / 2;
+      $panel.css({ top: y - h, left: x - w });
+    }
+
+    function updatePanelPosition() {
+      $panels.filter(':visible').each(function() {
+        positionPanel($(this));
+      });
+    }
+    $window.on('resize', updatePanelPosition);
+    updatePanelPosition();
   };
 
   // 10. Content Guidelines Navigation
@@ -1038,6 +1114,79 @@ jQuery(document).ready(function($) {
     });
 
     $local_input.val(myParam);
+  };
+
+  // 13. Sidebar Nav Page Section Highlighting
+
+  $.fn.highlightPageSection = function(options) {
+    var settings = $.extend(
+      {
+        offset: 38,
+      },
+      options
+    );
+
+    var $window = $(window);
+    var $this = this;
+    var $anchors = this.find('a');
+
+    $window.on('scroll', function() {
+      updateAnchorActive();
+    });
+
+    updateAnchorActive();
+
+    function updateAnchorActive() {
+      $anchors.removeClass('is-in-view');
+      $anchors.each(function() {
+        var $self = $(this);
+        var $el = $($self.attr('href'));
+        if ($el.length && isInFocus($el, 0.75)) {
+          $anchors.removeClass('is-in-view');
+          $self.addClass('is-in-view');
+        }
+      });
+    }
+
+    return this;
+  };
+
+  // 14. Expandable List
+  // ------
+
+  $.fn.expandableList = function(options) {
+    var settings = $.extend(
+      {
+        title: 'dt',
+        title_button: 'dt button',
+        description: 'dd',
+      },
+      options
+    );
+
+    this.find(settings.title).addClass('closed');
+    this.find(settings.title_button).attr('aria-expanded', 'false');
+    this.find(settings.description).attr('aria-hidden', 'true');
+
+    this.on('click', settings.title_button, function() {
+      var $this = $(this);
+
+      if ($this.attr('aria-expanded') == 'true') {
+        $this.attr('aria-expanded', 'false');
+        $this
+          .closest(settings.title)
+          .next(settings.description)
+          .attr('aria-hidden', 'true');
+      } else {
+        $this.attr('aria-expanded', 'true');
+        $this
+          .closest(settings.title)
+          .next(settings.description)
+          .attr('aria-hidden', 'false');
+      }
+
+      $this.closest(settings.title).toggleClass('closed');
+    });
   };
 
   // Utilities
