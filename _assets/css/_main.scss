@@ -1341,7 +1341,7 @@ $hamburger-hover-transition-timing-function: linear;
 }
 
 .tag-cta::before {
-  @include icon_font($char: $icon-search);
+  @include icon_font($char: $icon-tags);
 
   line-height: rem-calc(40);
 }
