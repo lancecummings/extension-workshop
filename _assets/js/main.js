@@ -155,6 +155,17 @@ jQuery(document).ready(function($) {
   if ($('#result-list').length) {
     $('#result-list').searchResults();
   }
+  if($('#tag-list').length) {
+    $('#tag-list').searchResults({
+      input: '.tag-cta #lunrsearch',
+      default: '.popular-searches',
+      search_fields: [
+      {
+        title: 'tags'
+      }],
+    });
+  }
+
 
   // Init Breakpoint Listeners
   // ------------------
@@ -922,6 +933,19 @@ jQuery(document).ready(function($) {
       {
         input: '.search-cta #lunrsearch',
         default: '.popular-searches',
+        search_fields: [
+        {
+          title: 'tags',
+          boost: 3,
+        }, 
+        {
+          title: 'title',
+          boost: 2,
+        }, 
+        {
+          title: 'body',
+          boost: 1,
+        }],
       },
       options
     );
@@ -938,7 +962,7 @@ jQuery(document).ready(function($) {
     function lunr_search(query) {
       var result = idx.search(query);
       var num = result.length && query != '' ? result.length : 0;
-      var query_output = num + ' results for "' + query + '"';
+      var query_output = num + ' ' + $container.data('message') + ' "' + query + '"';
       var $title = $('<h2 class="no-underline"></h2>');
 
       data.then(function(loaded_data) {
@@ -956,9 +980,8 @@ jQuery(document).ready(function($) {
           for (var item in result) {
             var ref = result[item].ref;
             var item = loaded_data.entries[ref];
-
-            var topic = item.topic
-              ? '<p class="post-meta"><small>' + item.topic + '</small></p>'
+            var topic = item.meta && item.meta.topic
+              ? '<p class="post-meta"><small>' + item.meta.topic + '</small></p>'
               : '';
             var excerpt =
               $.trim(item.body)
@@ -995,8 +1018,9 @@ jQuery(document).ready(function($) {
     data.then(function(loaded_data) {
       idx = lunr(function() {
         var l = this;
-        l.field('title');
-        l.field('body', { boost: 10 });
+        $.each(settings.search_fields, function(i, obj) {
+          l.field(obj.title, { boost: (obj.boost ? obj.boost : 1) });
+        });
         l.ref('id');
 
         $.each(loaded_data.entries, function(index, value) {

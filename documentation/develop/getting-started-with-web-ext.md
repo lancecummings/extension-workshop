@@ -4,6 +4,7 @@ title: Getting started with web-ext
 permalink: /documentation/develop/getting-started-with-web-ext/
 published: false
 topic: Develop
+tags: ['test', 'community', 'hello']
 ---
 
 <section class="module panel">

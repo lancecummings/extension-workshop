@@ -33,4 +33,4 @@ gem 'image_optim', '~> 0.26.3'
 gem 'image_optim_pack', '~> 0.5.1.20190105'
 
 # Uglifier for JS minification
-gem 'uglifier', '~> 4.1', '>= 4.1.20'
+gem 'uglifier', '~> 4.1', '>= 4.1.20' 
